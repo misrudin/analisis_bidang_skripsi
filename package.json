@@ -8,7 +8,11 @@
     "start": "nodemon node main.js"
   },
   "keywords": [],
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/misrudin/analisis_bidang_skripsi.git"
+  },
+  "author": "Misrudin",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.20.0",
