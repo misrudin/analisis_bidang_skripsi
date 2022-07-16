@@ -1,0 +1,6 @@
+SERVER_PORT=6060
+DB_HOST="localhost"
+DB_USER="root"
+DB_PASSWORD="root"
+DB_NAME="skripsi_farhan"
+PRIVATE_KEY="private.key.yqzzxhdc"
