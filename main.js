@@ -14,8 +14,12 @@ const corsOptions = {
 }
 app.use(cors(corsOptions));
 
-const router = require('./routers')
-app.use('/api/v1', router);
+// const router = require('./routers')
+// app.use('/api/v1', router);
+
+app.use("/", (req, res) => {
+  res.send("Hello World");
+})
 
 app.listen(port, () => {
   console.log(`\n Cors Enable App Listen Port http://localhost:${port}`);
