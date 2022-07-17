@@ -1,0 +1,32 @@
+stages:
+  - build
+  - deploy
+
+variables:
+  img: $CI_REGISTRY_IMAGE
+  img_stg: $CI_REGISTRY_IMAGE:stg
+
+build-master:
+  image: docker:19.03.5
+  stage: build
+  services:
+    - docker:19.03.5-dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - mv production.env .env
+  script:
+    - docker build -t $img .
+    - docker push $img
+  only:
+    - deploy
+
+deploy-master:
+  stage: deploy
+  script:
+    - apt update -y
+    - apt install -y sshpass
+    - export SSHPASS=$ssh_password
+    - sshpass -e ssh -o stricthostkeychecking=no -p $ssh_port $ssh_user_chat "/snap/bin/docker pull $img"
+    - sshpass -e ssh -o stricthostkeychecking=no -p $ssh_port $ssh_user_chat "/snap/bin/docker-compose  -f $ssh_path up -d chat"
+  only:
+    - deploy
