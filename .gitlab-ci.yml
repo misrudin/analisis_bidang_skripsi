@@ -25,7 +25,7 @@ deploy-master:
   script:
     - apt update -y
     - apt install -y sshpass
-    - export SSHPASS=$ssh_password
+    - export SSHPASS=$ssh_passwor
     - sshpass -e ssh -o stricthostkeychecking=no -p $ssh_port $ssh_user "/snap/bin/docker pull $img"
     - sshpass -e ssh -o stricthostkeychecking=no -p $ssh_port $ssh_user"/snap/bin/docker-compose  -f $ssh_path up -d analisis"
   only:
