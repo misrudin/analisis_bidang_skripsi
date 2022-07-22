@@ -58,11 +58,11 @@ module.exports = {
       );
     });
   },
-  getLaporanAnalisis: () => {
+  getLaporanAnalisis: (bidang) => {
     return new Promise((resolve, reject) => {
       const sql = `SELECT *
-                   FROM hasil`;
-      db.query(sql, (err, result) => {
+                   FROM hasil where cluster = ?`;
+      db.query(sql,bidang, (err, result) => {
         if (!err) {
           resolve(result);
         } else {
@@ -77,9 +77,9 @@ module.exports = {
                    FROM hasil`;
       db.query(sql, (err, result) => {
         if (!err) {
-          const cluster1 = result.filter(item => item.cluster === 'C1').length;
-          const cluster2 = result.filter(item => item.cluster === 'C2').length;
-          const cluster3 = result.filter(item => item.cluster === 'C3').length;
+          const cluster1 = result?.filter(item => item.cluster === 'C1')?.length ?? 0;
+          const cluster2 = result?.filter(item => item.cluster === 'C2')?.length ?? 0;
+          const cluster3 = result?.filter(item => item.cluster === 'C3')?.length ?? 0;
           resolve({
             cluster1: cluster1,
             cluster2: cluster2,

@@ -1,5 +1,6 @@
 const helpers = require("../helpers");
 const model = require("../models/analisis");
+const {query} = require("express");
 
 module.exports = {
   getAnalisis: async (req, res) => {
@@ -271,7 +272,8 @@ module.exports = {
       })
   },
   getLaporanAnalisis: (req, res) => {
-    model.getLaporanAnalisis().then((result) => {
+    const {bidang} = req.query
+    model.getLaporanAnalisis(bidang).then((result) => {
       helpers.response(res, result, 200, "Data Ditemukan");
     }).catch((e) => {
       helpers.response(res, null, 400, "Data Tidak Ditemukan");
