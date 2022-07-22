@@ -43,14 +43,32 @@ module.exports = {
       const valuesInsert = data.map((item) => [item.nim, item.nama, item.cluster])
       const sql = `INSERT INTO hasil (hasil.nim, hasil.nama, hasil.cluster)
                    values ? ON DUPLICATE KEY
-                   UPDATE nim =
-                   VALUES (hasil.nim), nama =
-                   VALUES (hasil.nama), cluster =
+                   UPDATE
+                       nim =
+                   VALUES (hasil.nim),
+                       nama =
+                   VALUES (hasil.nama),
+                       cluster =
                    VALUES (hasil.cluster)`;
+      const sqlDeleteMahasiswa = `TRUNCATE TABLE mahasiswa`;
+      const sqlDeleteNilai = `TRUNCATE TABLE nilai_mhs`;
+
       db.query(sql, [valuesInsert],
-        (err, result) => {
+        (err, _) => {
           if (!err) {
-            resolve(data)
+            db.query(sqlDeleteMahasiswa, (errDeleteMhs, _) => {
+              if (!errDeleteMhs) {
+                db.query(sqlDeleteNilai, (errDeleteNilai, _) => {
+                  if (!errDeleteNilai) {
+                    resolve(data)
+                  }
+                }).catch((err) => {
+                  reject(new Error(err));
+                })
+              }
+            }).catch((err) => {
+              reject(new Error(err));
+            })
           } else {
             reject(new Error(err));
           }
@@ -61,8 +79,9 @@ module.exports = {
   getLaporanAnalisis: (bidang) => {
     return new Promise((resolve, reject) => {
       const sql = `SELECT *
-                   FROM hasil where cluster = ?`;
-      db.query(sql,bidang, (err, result) => {
+                   FROM hasil
+                   where cluster = ?`;
+      db.query(sql, bidang, (err, result) => {
         if (!err) {
           resolve(result);
         } else {
