@@ -271,9 +271,17 @@ module.exports = {
       })
   },
   getLaporanAnalisis: (req, res) => {
-    helpers.response(res, null, 200, null);
+    model.getLaporanAnalisis().then((result) => {
+      helpers.response(res, result, 200, "Data Ditemukan");
+    }).catch((e) => {
+      helpers.response(res, null, 400, "Data Tidak Ditemukan");
+    })
   },
   getTrenBidangSkripsi: (req, res) => {
-    helpers.response(res, null, 200, null);
+    model.getTrenBidangSkripsi().then((result) => {
+      helpers.response(res, result, 200, "Data Ditemukan");
+    }).catch((e) => {
+      helpers.response(res, null, 400, "Data Tidak Ditemukan");
+    })
   },
 };
