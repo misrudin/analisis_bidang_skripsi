@@ -61,13 +61,13 @@ module.exports = {
                 db.query(sqlDeleteNilai, (errDeleteNilai, _) => {
                   if (!errDeleteNilai) {
                     resolve(data)
+                  } else {
+                    reject(new Error(errDeleteNilai));
                   }
-                }).catch((err) => {
-                  reject(new Error(err));
                 })
+              } else {
+                reject(new Error(errDeleteMhs))
               }
-            }).catch((err) => {
-              reject(new Error(err));
             })
           } else {
             reject(new Error(err));
