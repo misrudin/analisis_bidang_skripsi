@@ -27,6 +27,24 @@ module.exports = {
                     cluster3: dataCluster3,
                   };
 
+                  const titikClusters = [
+                    {
+                      nim: dataCluster1.nim,
+                      nama: dataCluster1.nama,
+                      cluster: "C1",
+                    },
+                    {
+                      nim: dataCluster2.nim,
+                      nama: dataCluster2.nama,
+                      cluster: "C2",
+                    },
+                    {
+                      nim: dataCluster3.nim,
+                      nama: dataCluster3.nama,
+                      cluster: "C3",
+                    }
+                  ]
+
                   let cluster_awal = {
                     cluster1: {
                       label: "C1",
@@ -238,6 +256,7 @@ module.exports = {
                     totalIterasi,
                     data: tempMhsWithCluster1,
                     cluster_akhir: cluster_akhir,
+                    titik_cluster: titikClusters
                   };
                   helpers.response(res, hasil, 200, "Berhasil Melakukan Iterasi");
                 });
