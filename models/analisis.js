@@ -76,6 +76,29 @@ module.exports = {
       );
     });
   },
+  saveResultNoDelete: (data) => {
+    return new Promise((resolve, reject) => {
+      const valuesInsert = data.map((item) => [item.nim, item.nama, item.cluster])
+      const sql = `INSERT INTO hasil (hasil.nim, hasil.nama, hasil.cluster)
+                   values ? ON DUPLICATE KEY
+                   UPDATE
+                       nim =
+                   VALUES (hasil.nim),
+                       nama =
+                   VALUES (hasil.nama),
+                       cluster =
+                   VALUES (hasil.cluster)`;
+      db.query(sql, [valuesInsert],
+        (err, _) => {
+          if (!err) {
+            resolve(data)
+          } else {
+            reject(new Error(err));
+          }
+        }
+      );
+    });
+  },
   getLaporanAnalisis: (bidang) => {
     return new Promise((resolve, reject) => {
       const sql = bidang ? `SELECT nim, nama, cluster
