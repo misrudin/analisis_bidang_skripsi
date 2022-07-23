@@ -92,17 +92,18 @@ module.exports = {
   },
   getTrenBidangSkripsi: () => {
     return new Promise((resolve, reject) => {
-      const sql = `SELECT *
-                   FROM hasil`;
-      db.query(sql, (err, result) => {
+      const sqlCluster1 = `SELECT (SELECT count(*)
+                                   FROM hasil where cluster = 'C1') AS cluster1,
+                                  (SELECT count(*)
+                                   FROM hasil where cluster = 'C2') AS cluster2,
+                                  (SELECT count(*)
+                                   FROM hasil where cluster = 'C3') AS cluster3;`
+      db.query(sqlCluster1, (err, result) => {
         if (!err) {
-          const cluster1 = result?.filter(item => item.cluster === 'C1')?.length ?? 0;
-          const cluster2 = result?.filter(item => item.cluster === 'C2')?.length ?? 0;
-          const cluster3 = result?.filter(item => item.cluster === 'C3')?.length ?? 0;
           resolve({
-            cluster1: cluster1,
-            cluster2: cluster2,
-            cluster3: cluster3
+            cluster1: result[0].cluster1,
+            cluster2: result[0].cluster2,
+            cluster3: result[0].cluster3
           });
         } else {
           reject(new Error(err));
