@@ -99,13 +99,12 @@ module.exports = {
       );
     });
   },
-  getLaporanAnalisis: (bidang) => {
+  getLaporanAnalisis: (bidang, angkatan) => {
     return new Promise((resolve, reject) => {
-      const sql = bidang ? `SELECT nim, nama, cluster, angkatan
+      const sql = `SELECT nim, nama, cluster, angkatan
                    FROM hasil
-                   where cluster = ?` : `SELECT nim, nama, cluster, angkatan
-                   FROM hasil`;
-      db.query(sql, bidang, (err, result) => {
+                   where cluster like '%'${bidang}'%' and angkatan like '%'${angkatan}'%'`;
+      db.query(sql, [bidang, angkatan], (err, result) => {
         if (!err) {
           resolve(result);
         } else {
