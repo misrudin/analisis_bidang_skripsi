@@ -40,16 +40,18 @@ module.exports = {
   },
   saveResult: (data) => {
     return new Promise((resolve, reject) => {
-      const valuesInsert = data.map((item) => [item.nim, item.nama, item.cluster])
-      const sql = `INSERT INTO hasil (hasil.nim, hasil.nama, hasil.cluster)
+      const valuesInsert = data.map((item) => [item.nim, item.nama, item.cluster, item.angkatan])
+      const sql = `INSERT INTO hasil (hasil.nim, hasil.nama, hasil.cluster, hasil.angkatan)
                    values ? ON DUPLICATE KEY
-                   UPDATE
-                       nim =
-                   VALUES (hasil.nim),
-                       nama =
-                   VALUES (hasil.nama),
-                       cluster =
-                   VALUES (hasil.cluster)`;
+      UPDATE
+          nim =
+      VALUES (hasil.nim),
+          nama =
+      VALUES (hasil.nama),
+          cluster =
+      VALUES (hasil.cluster),
+          angkatan =
+      VALUES (hasil.angkatan)`;
       const sqlDeleteMahasiswa = `TRUNCATE TABLE mahasiswa`;
       const sqlDeleteNilai = `TRUNCATE TABLE nilai_mhs`;
 
@@ -78,16 +80,18 @@ module.exports = {
   },
   saveResultNoDelete: (data) => {
     return new Promise((resolve, reject) => {
-      const valuesInsert = data.map((item) => [item.nim, item.nama, item.cluster])
-      const sql = `INSERT INTO hasil (hasil.nim, hasil.nama, hasil.cluster)
+      const valuesInsert = data.map((item) => [item.nim, item.nama, item.cluster, item.angkatan])
+      const sql = `INSERT INTO hasil (hasil.nim, hasil.nama, hasil.cluster, hasil.angkatan)
                    values ? ON DUPLICATE KEY
-                   UPDATE
-                       nim =
-                   VALUES (hasil.nim),
-                       nama =
-                   VALUES (hasil.nama),
-                       cluster =
-                   VALUES (hasil.cluster)`;
+      UPDATE
+          nim =
+      VALUES (hasil.nim),
+          nama =
+      VALUES (hasil.nama),
+          cluster =
+      VALUES (hasil.cluster),
+          angkatan =
+      VALUES (hasil.angkatan)`;
       db.query(sql, [valuesInsert],
         (err, _) => {
           if (!err) {
@@ -99,12 +103,11 @@ module.exports = {
       );
     });
   },
-  getLaporanAnalisis: (bidang, angkatan) => {
+  getLaporanAnalisis: ({bidang, angkatan}) => {
     return new Promise((resolve, reject) => {
-      const sql = `SELECT nim, nama, cluster, angkatan
-                   FROM hasil
-                   where cluster like '%'${bidang}'%' and angkatan like '%'${angkatan}'%'`;
-      db.query(sql, [bidang, angkatan], (err, result) => {
+      const sql = "SELECT nim, nama, cluster, angkatan FROM hasil where cluster like ? and angkatan like ?";
+      db.query(sql, ['%' + bidang + '%', '%' + angkatan + '%'], (err, result) => {
+        console.log(sql);
         if (!err) {
           resolve(result);
         } else {
@@ -117,11 +120,14 @@ module.exports = {
   getTrenBidangSkripsi: () => {
     return new Promise((resolve, reject) => {
       const sqlCluster1 = `SELECT (SELECT count(*)
-                                   FROM hasil where cluster = 'C1') AS cluster1,
+                                   FROM hasil
+                                   where cluster = 'C1') AS cluster1,
                                   (SELECT count(*)
-                                   FROM hasil where cluster = 'C2') AS cluster2,
+                                   FROM hasil
+                                   where cluster = 'C2') AS cluster2,
                                   (SELECT count(*)
-                                   FROM hasil where cluster = 'C3') AS cluster3;`
+                                   FROM hasil
+                                   where cluster = 'C3') AS cluster3;`
       db.query(sqlCluster1, (err, result) => {
         if (!err) {
           resolve({

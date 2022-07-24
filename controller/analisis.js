@@ -273,10 +273,10 @@ module.exports = {
   },
   saveResult: (req, res) => {
     const data = req.body;
-    if(data.length === 0 ) {
+    if (data.length === 0) {
       helpers.response(res, null, 400, "Data Tidak Boleh Kosong");
     }
-    const dataToSave = data.map(e=> {
+    const dataToSave = data.map(e => {
       return {
         'nim': e.nim,
         'nama': e.nama,
@@ -287,15 +287,15 @@ module.exports = {
     model.saveResult(dataToSave).then((result) => {
       helpers.response(res, result, 200, "Berhasil Menyimpan Data");
     }).catch((e) => {
-        helpers.response(res, null, 400, e.message);
-      })
+      helpers.response(res, null, 400, e.message);
+    })
   },
   saveResultNoDelete: (req, res) => {
     const data = req.body;
-    if(data.length === 0 ) {
+    if (data.length === 0) {
       helpers.response(res, null, 400, "Data Tidak Boleh Kosong");
     }
-    const dataToSave = data.map(e=> {
+    const dataToSave = data.map(e => {
       return {
         'nim': e.nim,
         'nama': e.nama,
@@ -310,8 +310,11 @@ module.exports = {
     })
   },
   getLaporanAnalisis: (req, res) => {
-    const {bidang} = req.query
-    model.getLaporanAnalisis(bidang).then((result) => {
+    const {bidang, angkatan} = req.query
+    console.log(bidang, angkatan)
+    model.getLaporanAnalisis({
+      bidang: bidang ?? '', angkatan: angkatan ?? ''
+    }).then((result) => {
       helpers.response(res, result, 200, "Data Ditemukan");
     }).catch((e) => {
       helpers.response(res, null, 400, "Data Tidak Ditemukan");
