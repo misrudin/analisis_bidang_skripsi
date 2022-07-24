@@ -1,4 +1,5 @@
 const db = require("../configs/db");
+const helpers = require("../helpers");
 
 module.exports = {
   getDataNilaiMahasiswa: () => {
@@ -135,6 +136,30 @@ module.exports = {
             cluster2: result[0].cluster2,
             cluster3: result[0].cluster3
           });
+        } else {
+          reject(new Error(err));
+        }
+      })
+    });
+  },
+  getBidangSkripsi: (mahasiswa) => {
+    return new Promise((resolve, reject) => {
+      const sql = `SELECT nim, nama, cluster, angkatan
+                   FROM hasil
+                   where nim = ?`;
+      db.query(sql, mahasiswa, (err, result) => {
+        if (!err) {
+          if(result.length === 0) {
+            reject(new Error("Data tidak ditemukan"));
+          } else {
+            const dataResult = result.map((item) => {
+              return {
+                ...item,
+                bidang_skripsi: helpers.kelompokSkripsi(item.cluster)
+              }
+            })
+            resolve(dataResult[0]);
+          }
         } else {
           reject(new Error(err));
         }

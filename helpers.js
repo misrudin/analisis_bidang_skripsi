@@ -24,9 +24,35 @@ const response = (res, data, code, msg) => {
   return res.status(tempResult.code).json(tempResult);
 };
 
+const kelompokSkripsi = (cluster) => {
+  switch (cluster) {
+    case 'C1':
+      return {
+        kelompok: "Internet of Things",
+        topik: ["Smart Cities, Smart Tourism dan IoT", "Monitoring dan Kendali jarak Jauh", "Sistem Terintegrasi"]
+      };
+    case 'C2':
+      return {
+        kelompok: "Artificial Intellegence",
+        topik: ["Kecerdasan Buatan / Sistem Cerdas", "Data Mining", "Pengelolaan Citra", "Sistem Pakar"]
+      };
+    case 'C3':
+      return {
+        kelompok: "Software Engginering",
+        topik: ["Sistem Informasi", "Desain Sistem Enterprise dan Pengembangannya", "Sistem Informasi dalam Mobile dan Digital", "Metodologi Rekayasa Perangkat Lunak", "Sistem Pendukung Keputusan", "Sistem Berbasis Pengetahuan", "UI/UX"]
+      };
+    default:
+      return {
+        kelompok: "Kamu tidak memiliki kelompok yang sesuai",
+        topik: []
+      };
+  }
+}
+
 module.exports = {
   groupByKey,
   pangkat,
   getMin,
   response,
+  kelompokSkripsi
 };

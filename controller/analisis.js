@@ -329,4 +329,15 @@ module.exports = {
       helpers.response(res, null, 400, "Data Tidak Ditemukan");
     })
   },
+  getBidangSkripsi: (req, res) => {
+    const {mahasiswa} = req.query
+    if(!mahasiswa) {
+      helpers.response(res, null, 400, "Mahasiswa Tidak Boleh Kosong");
+    }
+    model.getBidangSkripsi(mahasiswa).then((result) => {
+      helpers.response(res, result, 200, "Data Ditemukan");
+    }).catch((e) => {
+      helpers.response(res, null, 400, "Data Tidak Ditemukan");
+    })
+  },
 };
