@@ -311,9 +311,11 @@ module.exports = {
   },
   getLaporanAnalisis: (req, res) => {
     const {bidang, angkatan} = req.query
-    console.log(bidang, angkatan)
+    const bidangGet = bidang ? bidang : ''
+    const angkatanGet = angkatan ? angkatan : ''
     model.getLaporanAnalisis({
-      bidang: bidang ?? '', angkatan: angkatan ?? ''
+      bidang: bidangGet,
+      angkatan: angkatanGet
     }).then((result) => {
       helpers.response(res, result, 200, "Data Ditemukan");
     }).catch((e) => {
