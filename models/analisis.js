@@ -101,9 +101,9 @@ module.exports = {
   },
   getLaporanAnalisis: (bidang) => {
     return new Promise((resolve, reject) => {
-      const sql = bidang ? `SELECT nim, nama, cluster
+      const sql = bidang ? `SELECT nim, nama, cluster, angkatan
                    FROM hasil
-                   where cluster = ?` : `SELECT nim, nama, cluster
+                   where cluster = ?` : `SELECT nim, nama, cluster, angkatan
                    FROM hasil`;
       db.query(sql, bidang, (err, result) => {
         if (!err) {

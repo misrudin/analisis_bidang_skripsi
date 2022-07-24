@@ -281,6 +281,7 @@ module.exports = {
         'nim': e.nim,
         'nama': e.nama,
         'cluster': e.cluster,
+        'angkatan': e.angkatan,
       }
     })
     model.saveResult(dataToSave).then((result) => {
@@ -299,6 +300,7 @@ module.exports = {
         'nim': e.nim,
         'nama': e.nama,
         'cluster': e.cluster,
+        'angkatan': e.angkatan,
       }
     })
     model.saveResultNoDelete(dataToSave).then((result) => {
