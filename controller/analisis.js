@@ -3,12 +3,12 @@ const model = require("../models/analisis");
 
 module.exports = {
   getAnalisis: async (req, res) => {
-    const {nim_c1, nim_c2, nim_c3} = req.query;
-    if (!nim_c1 || !nim_c2 || !nim_c3) {
+    const {nim_c1, nim_c2, nim_c3, angkatan} = req.query;
+    if (!nim_c1 || !nim_c2 || !nim_c3 || !angkatan) {
       helpers.response(res, null, 400, "Bad Request");
     } else {
       model
-        .getDataNilaiMahasiswa()
+        .getDataNilaiMahasiswa(angkatan)
         .then((result) => {
           if (result) {
             const dataMahasiswa = result.map((item) => {
