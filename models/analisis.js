@@ -2,9 +2,9 @@ const db = require("../configs/db");
 const helpers = require("../helpers");
 
 module.exports = {
-  getDataNilaiMahasiswa: () => {
+  getDataNilaiMahasiswa: (angkatan) => {
     return new Promise((resolve, reject) => {
-      db.query("SELECT * FROM view_data_nilai", (err, result) => {
+      db.query("SELECT * FROM view_data_nilai where angkatan = ?", angkatan, (err, result) => {
         if (!err) {
           resolve(result);
         } else {
