@@ -290,25 +290,6 @@ module.exports = {
       helpers.response(res, null, 400, e.message);
     })
   },
-  saveResultNoDelete: (req, res) => {
-    const data = req.body;
-    if (data.length === 0) {
-      helpers.response(res, null, 400, "Data Tidak Boleh Kosong");
-    }
-    const dataToSave = data.map(e => {
-      return {
-        'nim': e.nim,
-        'nama': e.nama,
-        'cluster': e.cluster,
-        'angkatan': e.angkatan,
-      }
-    })
-    model.saveResultNoDelete(dataToSave).then((result) => {
-      helpers.response(res, result, 200, "Berhasil Menyimpan Data");
-    }).catch((e) => {
-      helpers.response(res, null, 400, e.message);
-    })
-  },
   getLaporanAnalisis: (req, res) => {
     const {bidang, angkatan} = req.query
     const bidangGet = bidang ? bidang : ''

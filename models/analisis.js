@@ -42,6 +42,11 @@ module.exports = {
   saveResult: (data) => {
     return new Promise((resolve, reject) => {
       const valuesInsert = data.map((item) => [item.nim, item.nama, item.cluster, item.angkatan])
+      const valueUpdate = data.map((item) => {
+        return `WHEN '${item.nim}' THEN 1`
+      }).join(" ");
+      const valueUpdateId = data.map((item) => item.nim).join(", ")
+
       const sql = `INSERT INTO hasil (hasil.nim, hasil.nama, hasil.cluster, hasil.angkatan)
                    values ? ON DUPLICATE KEY
       UPDATE
@@ -53,50 +58,22 @@ module.exports = {
       VALUES (hasil.cluster),
           angkatan =
       VALUES (hasil.angkatan)`;
-      const sqlDeleteMahasiswa = `TRUNCATE TABLE mahasiswa`;
-      const sqlDeleteNilai = `TRUNCATE TABLE nilai_mhs`;
-
+      const sqlUpdateMhs = `UPDATE mahasiswa
+                            SET isAnalyze = CASE nim
+                                                ${valueUpdate}
+                                            END
+                            WHERE nim IN (${valueUpdateId})`;
+      console.log(sqlUpdateMhs);
       db.query(sql, [valuesInsert],
         (err, _) => {
           if (!err) {
-            db.query(sqlDeleteMahasiswa, (errDeleteMhs, _) => {
-              if (!errDeleteMhs) {
-                db.query(sqlDeleteNilai, (errDeleteNilai, _) => {
-                  if (!errDeleteNilai) {
-                    resolve(data)
-                  } else {
-                    reject(new Error(errDeleteNilai));
-                  }
-                })
+            db.query(sqlUpdateMhs, (errUpdateMhs, _) => {
+              if (!errUpdateMhs) {
+                resolve(data)
               } else {
-                reject(new Error(errDeleteMhs))
+                reject(new Error(errUpdateMhs));
               }
             })
-          } else {
-            reject(new Error(err));
-          }
-        }
-      );
-    });
-  },
-  saveResultNoDelete: (data) => {
-    return new Promise((resolve, reject) => {
-      const valuesInsert = data.map((item) => [item.nim, item.nama, item.cluster, item.angkatan])
-      const sql = `INSERT INTO hasil (hasil.nim, hasil.nama, hasil.cluster, hasil.angkatan)
-                   values ? ON DUPLICATE KEY
-      UPDATE
-          nim =
-      VALUES (hasil.nim),
-          nama =
-      VALUES (hasil.nama),
-          cluster =
-      VALUES (hasil.cluster),
-          angkatan =
-      VALUES (hasil.angkatan)`;
-      db.query(sql, [valuesInsert],
-        (err, _) => {
-          if (!err) {
-            resolve(data)
           } else {
             reject(new Error(err));
           }
@@ -149,7 +126,7 @@ module.exports = {
                    where nim = ?`;
       db.query(sql, mahasiswa, (err, result) => {
         if (!err) {
-          if(result.length === 0) {
+          if (result.length === 0) {
             reject(new Error("Data tidak ditemukan"));
           } else {
             const dataResult = result.map((item) => {
