@@ -108,12 +108,12 @@ module.exports = {
           const cluster2 = []
           const cluster3 = []
           Object.keys(data).forEach(key => {
-            const c1 = data[key].find(item => item.cluster === 'C1')?.total
-            cluster1.push(c1 ?? 0)
-            const c2 = data[key].find(item => item.cluster === 'C2')?.total
-            cluster2.push(c2 ?? 0)
-            const c3 = data[key].find(item => item.cluster === 'C3')?.total
-            cluster3.push(c3 ?? 0)
+            const c1 = data[key].find(item => item.cluster === 'C1')
+            cluster1.push(c1 ? c1.total : 0)
+            const c2 = data[key].find(item => item.cluster === 'C2')
+            cluster2.push(c2 ? c2.total : 0)
+            const c3 = data[key].find(item => item.cluster === 'C3')
+            cluster3.push(c3 ? c3.total : 0)
           })
 
           resolve({
