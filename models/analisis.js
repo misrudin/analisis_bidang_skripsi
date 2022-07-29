@@ -97,7 +97,7 @@ module.exports = {
   },
   getTrenBidangSkripsi: () => {
     return new Promise((resolve, reject) => {
-      const sqlCluster1 = `select angkatan, cluster, count(*) as total from hasil group by angkatan, cluster;`
+      const sqlCluster1 = `select angkatan, cluster, count(*) as total from hasil group by angkatan, cluster order by angkatan asc`;
       db.query(sqlCluster1, (err, result) => {
         if (!err) {
           const allLabels = result.map(item => item.angkatan)
