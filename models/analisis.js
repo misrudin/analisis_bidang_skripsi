@@ -97,22 +97,31 @@ module.exports = {
   },
   getTrenBidangSkripsi: () => {
     return new Promise((resolve, reject) => {
-      const sqlCluster1 = `SELECT (SELECT count(*)
-                                   FROM hasil
-                                   where cluster = 'C1') AS cluster1,
-                                  (SELECT count(*)
-                                   FROM hasil
-                                   where cluster = 'C2') AS cluster2,
-                                  (SELECT count(*)
-                                   FROM hasil
-                                   where cluster = 'C3') AS cluster3;`
+      const sqlCluster1 = `select angkatan, cluster, count(*) as total_angkatan from hasil group by angkatan, cluster;`
       db.query(sqlCluster1, (err, result) => {
         if (!err) {
+          const allLabels = result.map(item => item.angkatan)
+          const labels = allLabels.filter((item, index) => allLabels.indexOf(item) === index)
+          const data = helpers.groupByKey(result, 'angkatan')
+
+          const cluster1 = []
+          const cluster2 = []
+          const cluster3 = []
+          Object.keys(data).forEach(key => {
+            const c1 = data[key].find(item => item.cluster === 'C1')?.total_angkatan
+            cluster1.push(c1 ?? 0)
+            const c2 = data[key].find(item => item.cluster === 'C2')?.total_angkatan
+            cluster2.push(c2 ?? 0)
+            const c3 = data[key].find(item => item.cluster === 'C3')?.total_angkatan
+            cluster3.push(c3 ?? 0)
+          })
+
           resolve({
-            cluster1: result[0].cluster1,
-            cluster2: result[0].cluster2,
-            cluster3: result[0].cluster3
-          });
+            labels: labels,
+            dataset_1: cluster1,
+            dataset_2: cluster2,
+            dataset_3: cluster3,
+          })
         } else {
           reject(new Error(err));
         }
